@@ -8,6 +8,8 @@
     }
     String usuario = (String) session.getAttribute("USER");
     List<Usuario> lista = (List<Usuario>) request.getAttribute("lista");
+    String mensaje = (String) request.getAttribute("mensaje");
+    String error = (String) request.getAttribute("error");
 %>
 <!DOCTYPE html>
 <html lang="es">
@@ -26,9 +28,31 @@
         }
         .table th {
             border-top: none;
+            background-color: #343a40;
+            color: white;
+            font-weight: 600;
         }
         .btn-group .btn {
             margin: 0 1px;
+        }
+        .table-hover tbody tr:hover {
+            background-color: rgba(0,123,255,.075);
+        }
+        .badge {
+            font-size: 0.75em;
+        }
+        .stats-card {
+            border-left: 4px solid #007bff;
+            background: linear-gradient(45deg, rgba(0,123,255,0.1), rgba(255,255,255,0.9));
+        }
+        .empty-state {
+            text-align: center;
+            padding: 3rem 1rem;
+        }
+        .empty-state i {
+            font-size: 4rem;
+            color: #6c757d;
+            margin-bottom: 1rem;
         }
     </style>
 </head>
@@ -36,6 +60,104 @@
     <jsp:include page="menuppl.jsp" />
     
     <div class="container-fluid mt-4">
+        <!-- Mensajes de estado -->
+        <% if (mensaje != null) { %>
+        <div class="row mb-3">
+            <div class="col-12">
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <i class="fas fa-check-circle"></i> <%= mensaje %>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            </div>
+        </div>
+        <% } %>
+        
+        <% if (error != null) { %>
+        <div class="row mb-3">
+            <div class="col-12">
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <i class="fas fa-exclamation-triangle"></i> <%= error %>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            </div>
+        </div>
+        <% } %>
+        
+        <!-- Estadísticas rápidas -->
+        <% if (lista != null && !lista.isEmpty()) { %>
+        <div class="row mb-4">
+            <div class="col-md-3">
+                <div class="card stats-card">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="card-title text-muted mb-1">Total Usuarios</h6>
+                                <h3 class="mb-0 text-primary"><%= lista.size() %></h3>
+                            </div>
+                            <i class="fas fa-users fa-2x text-primary opacity-50"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card stats-card border-warning">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="card-title text-muted mb-1">Administradores</h6>
+                                <h3 class="mb-0 text-warning">
+                                    <% 
+                                    int admins = 0;
+                                    for (Usuario u : lista) {
+                                        if (u.getIdNivelUsuario() == 1) admins++;
+                                    }
+                                    %>
+                                    <%= admins %>
+                                </h3>
+                            </div>
+                            <i class="fas fa-user-shield fa-2x text-warning opacity-50"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card stats-card border-success">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="card-title text-muted mb-1">Usuarios Regulares</h6>
+                                <h3 class="mb-0 text-success">
+                                    <% 
+                                    int users = 0;
+                                    for (Usuario u : lista) {
+                                        if (u.getIdNivelUsuario() == 2) users++;
+                                    }
+                                    %>
+                                    <%= users %>
+                                </h3>
+                            </div>
+                            <i class="fas fa-user fa-2x text-success opacity-50"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card stats-card border-info">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="card-title text-muted mb-1">Usuario Actual</h6>
+                                <h6 class="mb-0 text-info"><%= usuario %></h6>
+                            </div>
+                            <i class="fas fa-user-circle fa-2x text-info opacity-50"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <% } %>
+        
+        <!-- Tabla de usuarios -->
         <div class="row">
             <div class="col-12">
                 <div class="card">
@@ -47,45 +169,76 @@
                             <i class="fas fa-plus"></i> Nuevo Usuario
                         </a>
                     </div>
-                    <div class="card-body">
+                    <div class="card-body p-0">
                         <% if (lista != null && !lista.isEmpty()) { %>
                         <div class="table-responsive">
-                            <table class="table table-striped table-hover">
-                                <thead class="table-dark">
+                            <table class="table table-striped table-hover mb-0">
+                                <thead>
                                     <tr>
-                                        <th>ID</th>
-                                        <th>Username</th>
-                                        <th>Nombres</th>
-                                        <th>Apellidos</th>
-                                        <th>Correo</th>
-                                        <th>Teléfono</th>
-                                        <th>Nivel Usuario</th>
-                                        <th class="text-center">Acciones</th>
+                                        <th scope="col">#</th>
+                                        <th scope="col"><i class="fas fa-user me-1"></i>Username</th>
+                                        <th scope="col"><i class="fas fa-id-card me-1"></i>Nombres</th>
+                                        <th scope="col"><i class="fas fa-id-card me-1"></i>Apellidos</th>
+                                        <th scope="col"><i class="fas fa-envelope me-1"></i>Correo</th>
+                                        <th scope="col"><i class="fas fa-phone me-1"></i>Teléfono</th>
+                                        <th scope="col"><i class="fas fa-shield-alt me-1"></i>Nivel</th>
+                                        <th scope="col" class="text-center"><i class="fas fa-cogs me-1"></i>Acciones</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <% for (Usuario u : lista) { %>
+                                    <% 
+                                    int contador = 1;
+                                    for (Usuario u : lista) { 
+                                    %>
                                     <tr>
-                                        <td><%= u.getIdUsuario() %></td>
-                                        <td><strong><%= u.getUsername() %></strong></td>
-                                        <td><%= u.getNombresUsuario() %></td>
-                                        <td><%= u.getApellidosUsuario() %></td>
-                                        <td><%= u.getCorreoUsuario() %></td>
-                                        <td><%= u.getTelefonoUsuario() %></td>
+                                        <td><span class="badge bg-secondary"><%= contador++ %></span></td>
+                                        <td>
+                                            <strong class="text-primary"><%= u.getUsername() %></strong>
+                                            <% if (u.getUsername().equals(usuario)) { %>
+                                                <span class="badge bg-info ms-1">Tú</span>
+                                            <% } %>
+                                        </td>
+                                        <td><%= u.getNombresUsuario() != null ? u.getNombresUsuario() : "<em class='text-muted'>Sin especificar</em>" %></td>
+                                        <td><%= u.getApellidosUsuario() != null ? u.getApellidosUsuario() : "<em class='text-muted'>Sin especificar</em>" %></td>
+                                        <td>
+                                            <% if (u.getCorreoUsuario() != null && !u.getCorreoUsuario().trim().isEmpty()) { %>
+                                                <a href="mailto:<%= u.getCorreoUsuario() %>" class="text-decoration-none">
+                                                    <%= u.getCorreoUsuario() %>
+                                                </a>
+                                            <% } else { %>
+                                                <em class="text-muted">Sin especificar</em>
+                                            <% } %>
+                                        </td>
+                                        <td>
+                                            <% if (u.getTelefonoUsuario() != null && !u.getTelefonoUsuario().trim().isEmpty()) { %>
+                                                <a href="tel:<%= u.getTelefonoUsuario() %>" class="text-decoration-none">
+                                                    <%= u.getTelefonoUsuario() %>
+                                                </a>
+                                            <% } else { %>
+                                                <em class="text-muted">Sin especificar</em>
+                                            <% } %>
+                                        </td>
                                         <td>
                                             <% if (u.getIdNivelUsuario() == 1) { %>
-                                                <span class="badge bg-danger">Administrador</span>
+                                                <span class="badge bg-danger">
+                                                    <i class="fas fa-user-shield me-1"></i>Administrador
+                                                </span>
                                             <% } else if (u.getIdNivelUsuario() == 2) { %>
-                                                <span class="badge bg-warning">Usuario</span>
+                                                <span class="badge bg-warning text-dark">
+                                                    <i class="fas fa-user me-1"></i>Usuario
+                                                </span>
                                             <% } else { %>
-                                                <span class="badge bg-secondary">Nivel <%= u.getIdNivelUsuario() %></span>
+                                                <span class="badge bg-secondary">
+                                                    <i class="fas fa-question me-1"></i>Nivel <%= u.getIdNivelUsuario() %>
+                                                </span>
                                             <% } %>
                                         </td>
                                         <td class="text-center">
-                                            <div class="btn-group" role="group">
-                                                <a class="btn btn-warning btn-sm" 
+                                            <div class="btn-group" role="group" aria-label="Acciones de usuario">
+                                                <a class="btn btn-outline-primary btn-sm" 
                                                    href="UsuarioServlet?accion=editar&id=<%= u.getIdUsuario() %>"
-                                                   title="Editar">
+                                                   title="Editar usuario <%= u.getUsername() %>"
+                                                   data-bs-toggle="tooltip">
                                                     <i class="fas fa-edit"></i>
                                                 </a>
                                                 <% 
@@ -93,12 +246,19 @@
                                                 Integer usuarioActualId = (Integer) session.getAttribute("id_usuario");
                                                 if (usuarioActualId == null || usuarioActualId != u.getIdUsuario()) {
                                                 %>
-                                                <a class="btn btn-danger btn-sm" 
-                                                   href="UsuarioServlet?accion=eliminar&id=<%= u.getIdUsuario() %>"
-                                                   onclick="return confirm('¿Estás seguro de eliminar al usuario <%= u.getUsername() %>? Esta acción no se puede deshacer.')"
-                                                   title="Eliminar">
+                                                <button type="button" class="btn btn-outline-danger btn-sm" 
+                                                        onclick="confirmarEliminacion('<%= u.getUsername() %>', <%= u.getIdUsuario() %>)"
+                                                        title="Eliminar usuario <%= u.getUsername() %>"
+                                                        data-bs-toggle="tooltip">
                                                     <i class="fas fa-trash"></i>
-                                                </a>
+                                                </button>
+                                                <% } else { %>
+                                                <button type="button" class="btn btn-outline-secondary btn-sm" 
+                                                        disabled
+                                                        title="No puedes eliminarte a ti mismo"
+                                                        data-bs-toggle="tooltip">
+                                                    <i class="fas fa-ban"></i>
+                                                </button>
                                                 <% } %>
                                             </div>
                                         </td>
@@ -108,21 +268,15 @@
                             </table>
                         </div>
                         <% } else { %>
-                        <div class="text-center py-5">
-                            <i class="fas fa-users fa-3x text-muted mb-3"></i>
-                            <h5 class="text-muted">No hay usuarios registrados</h5>
-                            <p class="text-muted">Comienza agregando el primer usuario</p>
-                            <a href="UsuarioServlet?accion=nuevo" class="btn btn-primary">
-                                <i class="fas fa-plus"></i> Agregar Usuario
+                        <div class="empty-state">
+                            <i class="fas fa-users"></i>
+                            <h5 class="text-muted mb-3">No hay usuarios registrados</h5>
+                            <p class="text-muted mb-4">Comienza agregando el primer usuario al sistema</p>
+                            <a href="UsuarioServlet?accion=nuevo" class="btn btn-primary btn-lg">
+                                <i class="fas fa-plus me-2"></i>Agregar Usuario
                             </a>
                         </div>
                         <% } %>
                     </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <script src="js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+                    <% if (lista != null && !lista.isEmpty()) { %>
+                    <div class="card-footer bg-light">
