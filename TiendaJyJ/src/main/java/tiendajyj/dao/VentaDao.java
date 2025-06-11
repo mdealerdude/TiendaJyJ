@@ -197,12 +197,12 @@ public class VentaDao {
 
             while (rs.next()) {
                 Producto producto = new Producto();
-                producto.setId_producto(rs.getInt("id_producto"));
-                producto.setNombre_producto(rs.getString("nombre_producto"));
-                producto.setPrecio_producto(rs.getBigDecimal("precio_producto"));
-                producto.setStock_producto(rs.getInt("stock_producto"));
+                producto.setIdProducto(rs.getInt("id_producto"));
+                producto.setNombreProducto(rs.getString("nombre_producto"));
+                producto.setPrecioProducto(rs.getBigDecimal("precio_producto"));
+                producto.setStockProducto(rs.getInt("stock_producto"));
                 // Usamos el campo nombre_marca como información adicional
-                producto.setNombre_marca(rs.getString("nombre_marca"));
+                producto.setNombreMarca(rs.getString("nombre_marca"));
                 lista.add(producto);
             }
 
