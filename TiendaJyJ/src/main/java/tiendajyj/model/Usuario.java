@@ -1,6 +1,6 @@
 package tiendajyj.model;
 
-import java.sql.Timestamp;
+import java.util.Date;
 
 public class Usuario {
     private int idUsuario;
@@ -11,23 +11,23 @@ public class Usuario {
     private String correoUsuario;
     private String telefonoUsuario;
     private String password;
-    private Timestamp fechaCreacionUsuario;
-    private Timestamp fechaActualizacionUsuario;
+    private Date fechaCreacionUsuario;
+    private Date fechaActualizacionUsuario;
 
     // Constructor vacío
     public Usuario() {
     }
 
     // Constructor con parámetros principales
-    public Usuario(int idNivelUsuario, String username, String nombresUsuario, 
-                   String apellidosUsuario, String correoUsuario, String telefonoUsuario, String password) {
-        this.idNivelUsuario = idNivelUsuario;
+    public Usuario(String username, String nombresUsuario, String apellidosUsuario, 
+                  String correoUsuario, String telefonoUsuario, String password, int idNivelUsuario) {
         this.username = username;
         this.nombresUsuario = nombresUsuario;
         this.apellidosUsuario = apellidosUsuario;
         this.correoUsuario = correoUsuario;
         this.telefonoUsuario = telefonoUsuario;
         this.password = password;
+        this.idNivelUsuario = idNivelUsuario;
     }
 
     // Getters y Setters
@@ -95,22 +95,23 @@ public class Usuario {
         this.password = password;
     }
 
-    public Timestamp getFechaCreacionUsuario() {
+    public Date getFechaCreacionUsuario() {
         return fechaCreacionUsuario;
     }
 
-    public void setFechaCreacionUsuario(Timestamp fechaCreacionUsuario) {
+    public void setFechaCreacionUsuario(Date fechaCreacionUsuario) {
         this.fechaCreacionUsuario = fechaCreacionUsuario;
     }
 
-    public Timestamp getFechaActualizacionUsuario() {
+    public Date getFechaActualizacionUsuario() {
         return fechaActualizacionUsuario;
     }
 
-    public void setFechaActualizacionUsuario(Timestamp fechaActualizacionUsuario) {
+    public void setFechaActualizacionUsuario(Date fechaActualizacionUsuario) {
         this.fechaActualizacionUsuario = fechaActualizacionUsuario;
     }
 
+    // Método toString para debugging
     @Override
     public String toString() {
         return "Usuario{" +
@@ -121,6 +122,8 @@ public class Usuario {
                 ", apellidosUsuario='" + apellidosUsuario + '\'' +
                 ", correoUsuario='" + correoUsuario + '\'' +
                 ", telefonoUsuario='" + telefonoUsuario + '\'' +
+                ", fechaCreacionUsuario=" + fechaCreacionUsuario +
+                ", fechaActualizacionUsuario=" + fechaActualizacionUsuario +
                 '}';
     }
 }

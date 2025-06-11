@@ -1,6 +1,4 @@
 tiendajyj\servlet\LoginServlet.class
-tiendajyj\servlet\EmpleadoServlet.class
-tiendajyj\dao\EmpleadoDAO.class
 tiendajyj\dao\UsuarioDAO.class
 tiendajyj\model\Usuario.class
 tiendajyj\servlet\ClienteServlet.class
@@ -12,7 +10,6 @@ tiendajyj\model\Producto.class
 tiendajyj\model\Venta.class
 tiendajyj\servlet\ProductoServlet.class
 tiendajyj\model\Cliente.class
-tiendajyj\model\Empleado.class
 tiendajyj\model\NivelAcceso.class
 sv\edu\infravenz\tiendajyj\JakartaRestConfiguration.class
 tiendajyj\dao\ClienteDao.class

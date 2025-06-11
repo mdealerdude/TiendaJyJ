@@ -33,13 +33,6 @@ public class UsuarioDAO {
                 usuario.setCorreoUsuario(rs.getString("correo_usuario"));
                 usuario.setTelefonoUsuario(rs.getString("telefono_usuario"));
                 usuario.setPassword(rs.getString("password"));
-                // Agregar fechas si existen en la tabla
-                try {
-                    usuario.setFechaCreacionUsuario(rs.getTimestamp("fecha_creacion_usuario"));
-                    usuario.setFechaActualizacionUsuario(rs.getTimestamp("fecha_actualizacion_usuario"));
-                } catch (SQLException e) {
-                    // Las fechas son opcionales
-                }
                 lista.add(usuario);
             }
 
@@ -67,13 +60,6 @@ public class UsuarioDAO {
                     usuario.setCorreoUsuario(rs.getString("correo_usuario"));
                     usuario.setTelefonoUsuario(rs.getString("telefono_usuario"));
                     usuario.setPassword(rs.getString("password"));
-                    // Agregar fechas si existen
-                    try {
-                        usuario.setFechaCreacionUsuario(rs.getTimestamp("fecha_creacion_usuario"));
-                        usuario.setFechaActualizacionUsuario(rs.getTimestamp("fecha_actualizacion_usuario"));
-                    } catch (SQLException e) {
-                        // Las fechas son opcionales
-                    }
                 }
             }
         } catch (SQLException e) {
@@ -84,8 +70,14 @@ public class UsuarioDAO {
     }
 
     public boolean insertarUsuario(Usuario usuario) {
-        // Consulta simplificada sin fechas (la base de datos las manejará automáticamente)
-        String sql = "INSERT INTO usuarios (id_nivel_usuario, username, nombres_usuario, apellidos_usuario, correo_usuario, telefono_usuario, password) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        // Primero verificar si el username ya existe
+        if (existeUsername(usuario.getUsername())) {
+            System.out.println("El username ya existe: " + usuario.getUsername());
+            return false;
+        }
+
+        // SQL corregido - usando NOW() para las fechas
+        String sql = "INSERT INTO usuarios (id_nivel_usuario, username, nombres_usuario, apellidos_usuario, correo_usuario, telefono_usuario, password, fecha_creacion_usuario, fecha_actualizacion_usuario) VALUES (?, ?, ?, ?, ?, ?, ?, NOW(), NOW())";
 
         try (PreparedStatement st = conn.prepareStatement(sql)) {
             st.setInt(1, usuario.getIdNivelUsuario());
@@ -105,8 +97,8 @@ public class UsuarioDAO {
     }
 
     public boolean actualizarUsuario(Usuario usuario) {
-        // Consulta corregida - removemos fecha_actualizacion_usuario del SET ya que falta el parámetro
-        String sql = "UPDATE usuarios SET id_nivel_usuario = ?, username = ?, nombres_usuario = ?, apellidos_usuario = ?, correo_usuario = ?, telefono_usuario = ?, password = ? WHERE id_usuario = ?";
+        // SQL corregido - usando NOW() para fecha_actualizacion_usuario
+        String sql = "UPDATE usuarios SET id_nivel_usuario = ?, username = ?, nombres_usuario = ?, apellidos_usuario = ?, correo_usuario = ?, telefono_usuario = ?, password = ?, fecha_actualizacion_usuario = NOW() WHERE id_usuario = ?";
 
         try (PreparedStatement st = conn.prepareStatement(sql)) {
             st.setInt(1, usuario.getIdNivelUsuario());
@@ -116,7 +108,7 @@ public class UsuarioDAO {
             st.setString(5, usuario.getCorreoUsuario());
             st.setString(6, usuario.getTelefonoUsuario());
             st.setString(7, usuario.getPassword());
-            st.setInt(8, usuario.getIdUsuario()); // Corregido: era posición 9, ahora es 8
+            st.setInt(8, usuario.getIdUsuario()); // Corregido: era parámetro 9, ahora es 8
 
             return st.executeUpdate() > 0;
 
@@ -138,10 +130,37 @@ public class UsuarioDAO {
             return false;
         }
     }
-    
-    public void cerrarConexion() throws SQLException {
-        if (conn != null && !conn.isClosed()) {
-            conn.close();
+
+    // Método auxiliar para verificar si un username ya existe
+    private boolean existeUsername(String username) {
+        String sql = "SELECT COUNT(*) FROM usuarios WHERE username = ?";
+        try (PreparedStatement st = conn.prepareStatement(sql)) {
+            st.setString(1, username);
+            try (ResultSet rs = st.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1) > 0;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
+        return false;
+    }
+
+    // Método para verificar si un username ya existe excluyendo un ID específico (útil para actualizar)
+    public boolean existeUsernameExcluyendoId(String username, int idUsuario) {
+        String sql = "SELECT COUNT(*) FROM usuarios WHERE username = ? AND id_usuario != ?";
+        try (PreparedStatement st = conn.prepareStatement(sql)) {
+            st.setString(1, username);
+            st.setInt(2, idUsuario);
+            try (ResultSet rs = st.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1) > 0;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 }
