@@ -1,11 +1,11 @@
 tiendajyj\servlet\LoginServlet.class
 tiendajyj\servlet\EmpleadoServlet.class
 tiendajyj\dao\EmpleadoDAO.class
+tiendajyj\dao\UsuarioDAO.class
 tiendajyj\model\Usuario.class
 tiendajyj\servlet\ClienteServlet.class
 tiendajyj\dao\ProductoDao.class
 tiendajyj\dao\ProductoDao$Marca.class
-tiendajyj\dao\UsuarioDao.class
 tiendajyj\servlet\Conexion.class
 sv\edu\infravenz\tiendajyj\resources\JakartaEE11Resource.class
 tiendajyj\model\Producto.class

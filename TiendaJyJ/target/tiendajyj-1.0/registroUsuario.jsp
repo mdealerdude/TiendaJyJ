@@ -42,7 +42,7 @@
                     <div class="card-body">
                         <form action="UsuarioServlet" method="post" id="formUsuario">
                             <% if (editar) { %>
-                                <input type="hidden" name="id_usuario" value="<%= usr.getId_usuario() %>">
+                                <input type="hidden" name="id_usuario" value="<%= usr.getIdUsuario() %>">
                                 <input type="hidden" name="accion" value="actualizar">
                             <% } else { %>
                                 <input type="hidden" name="accion" value="insertar">
@@ -90,7 +90,7 @@
                                                 while (rs.next()) {
                                                     int idNivel = rs.getInt("id_nivel_usuario");
                                                     String nombreNivel = rs.getString("nombre_nivel");
-                                                    boolean selected = editar && usr.getId_nivel_usuario() == idNivel;
+                                                    boolean selected = editar && usr.getIdNivelUsuario() == idNivel;
                                         %>
                                         <option value="<%= idNivel %>" <%= selected ? "selected" : "" %>>
                                             <%= nombreNivel %>
@@ -143,7 +143,7 @@
                                         <i class="fas fa-user"></i> Nombres *
                                     </label>
                                     <input type="text" name="nombres_usuario" class="form-control" required 
-                                           value="<%= editar ? usr.getNombres_usuario() : "" %>"
+                                           value="<%= editar ? usr.getNombresUsuario() : "" %>"
                                            placeholder="Nombres completos">
                                 </div>
                                 <div class="col-md-6">
@@ -151,7 +151,7 @@
                                         <i class="fas fa-user"></i> Apellidos *
                                     </label>
                                     <input type="text" name="apellidos_usuario" class="form-control" required 
-                                           value="<%= editar ? usr.getApellidos_usuario() : "" %>"
+                                           value="<%= editar ? usr.getApellidosUsuario() : "" %>"
                                            placeholder="Apellidos completos">
                                 </div>
                             </div>
@@ -171,7 +171,7 @@
                                         <i class="fas fa-envelope"></i> Correo Electrónico *
                                     </label>
                                     <input type="email" name="correo_usuario" class="form-control" required 
-                                           value="<%= editar ? usr.getCorreo_usuario() : "" %>"
+                                           value="<%= editar ? usr.getCorreoUsuario() : "" %>"
                                            placeholder="usuario@ejemplo.com">
                                 </div>
                                 <div class="col-md-6">
@@ -179,7 +179,7 @@
                                         <i class="fas fa-phone"></i> Teléfono *
                                     </label>
                                     <input type="tel" name="telefono_usuario" class="form-control" required 
-                                           value="<%= editar ? usr.getTelefono_usuario() : "" %>"
+                                           value="<%= editar ? usr.getTelefonoUsuario() : "" %>"
                                            placeholder="0000-0000" pattern="[0-9]{4}-[0-9]{4}">
                                     <div class="form-text">Formato: 0000-0000</div>
                                 </div>

@@ -53,22 +53,22 @@
                                             for (Usuario usr : lista) {
                                     %>
                                     <tr>
-                                        <td><%= usr.getId_usuario() %></td>
+                                        <td><%= usr.getIdUsuario() %></td>
                                         <td>
                                             <strong><%= usr.getUsername() %></strong>
                                         </td>
-                                        <td><%= usr.getNombres_usuario() %></td>
-                                        <td><%= usr.getApellidos_usuario() %></td>
+                                        <td><%= usr.getNombresUsuario() %></td>
+                                        <td><%= usr.getApellidosUsuario() %></td>
                                         <td>
-                                            <a href="mailto:<%= usr.getCorreo_usuario() %>" class="text-decoration-none">
-                                                <%= usr.getCorreo_usuario() %>
+                                            <a href="mailto:<%= usr.getCorreoUsuario() %>" class="text-decoration-none">
+                                                <%= usr.getCorreoUsuario() %>
                                             </a>
                                         </td>
-                                        <td><%= usr.getTelefono_usuario() %></td>
+                                        <td><%= usr.getTelefonoUsuario() %></td>
                                         <td>
                                             <% 
                                             // Mostrar badge según el nivel de usuario
-                                            int nivelUsuario = usr.getId_nivel_usuario();
+                                            int nivelUsuario = usr.getIdNivelUsuario();
                                             String badgeClass = "";
                                             String nivelTexto = "";
                                             
@@ -94,34 +94,34 @@
                                         </td>
                                         <td>
                                             <% 
-                                            if (usr.getFecha_creacion_usuario() != null) {
+                                            if (usr.getFechaCreacionUsuario() != null) {
                                                 java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("dd/MM/yyyy HH:mm");
                                             %>
-                                                <%= sdf.format(usr.getFecha_creacion_usuario()) %>
+                                                <%= sdf.format(usr.getFechaCreacionUsuario()) %>
                                             <% } else { %>
                                                 <span class="text-muted">Sin fecha</span>
                                             <% } %>
                                         </td>
                                         <td>
                                             <div class="btn-group" role="group">
-                                                <a href="UsuarioServlet?accion=ver&id=<%= usr.getId_usuario() %>" 
+                                                <a href="UsuarioServlet?accion=ver&id=<%= usr.getIdUsuario() %>" 
                                                    class="btn btn-info btn-sm" title="Ver detalles">
                                                     <i class="fas fa-eye"></i>
                                                 </a>
-                                                <a href="UsuarioServlet?accion=editar&id=<%= usr.getId_usuario() %>" 
+                                                <a href="UsuarioServlet?accion=editar&id=<%= usr.getIdUsuario() %>" 
                                                    class="btn btn-warning btn-sm" title="Editar">
                                                     <i class="fas fa-edit"></i>
                                                 </a>
-                                                <a href="UsuarioServlet?accion=cambiarPassword&id=<%= usr.getId_usuario() %>" 
+                                                <a href="UsuarioServlet?accion=cambiarPassword&id=<%= usr.getIdUsuario() %>" 
                                                    class="btn btn-secondary btn-sm" title="Cambiar contraseña">
                                                     <i class="fas fa-key"></i>
                                                 </a>
                                                 <% 
                                                 // Verificar si el usuario actual puede eliminar este usuario
                                                 Integer usuarioActualId = (Integer) session.getAttribute("id_usuario");
-                                                if (usuarioActualId == null || usuarioActualId != usr.getId_usuario()) {
+                                                if (usuarioActualId == null || usuarioActualId != usr.getIdUsuario()) {
                                                 %>
-                                                <a href="UsuarioServlet?accion=eliminar&id=<%= usr.getId_usuario() %>" 
+                                                <a href="UsuarioServlet?accion=eliminar&id=<%= usr.getIdUsuario() %>" 
                                                    class="btn btn-danger btn-sm" title="Eliminar"
                                                    onclick="return confirm('¿Estás seguro de eliminar al usuario <%= usr.getUsername() %>? Esta acción no se puede deshacer.')">
                                                     <i class="fas fa-trash"></i>
