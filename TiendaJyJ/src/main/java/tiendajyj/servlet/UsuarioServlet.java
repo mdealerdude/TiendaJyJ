@@ -78,6 +78,17 @@ public class UsuarioServlet extends HttpServlet {
             throws ServletException, IOException, SQLException {
         List<Usuario> listaUsuarios = usuarioDAO.listarUsuarios();
         request.setAttribute("lista", listaUsuarios);
+        
+        // Pasar mensajes de éxito o error si existen
+        String mensaje = request.getParameter("mensaje");
+        String error = request.getParameter("error");
+        if (mensaje != null) {
+            request.setAttribute("mensaje", mensaje);
+        }
+        if (error != null) {
+            request.setAttribute("error", error);
+        }
+        
         RequestDispatcher dispatcher = request.getRequestDispatcher("usuarios.jsp");
         dispatcher.forward(request, response);
     }
@@ -91,42 +102,112 @@ public class UsuarioServlet extends HttpServlet {
     private void insertarUsuario(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, IOException, ServletException {
         
-        // Validaciones del lado del servidor
+        // Obtener parámetros del formulario
         String username = request.getParameter("username");
         String password = request.getParameter("password");
-        String confirmarPassword = request.getParameter("confirmar_password");
+        String nombres = request.getParameter("nombres_usuario");
+        String apellidos = request.getParameter("apellidos_usuario");
+        String correo = request.getParameter("correo_usuario");
+        String telefono = request.getParameter("telefono_usuario");
+        String nivelStr = request.getParameter("id_nivel_usuario");
         
-        // Validar que las contraseñas coincidan
-        if (password != null && confirmarPassword != null && !password.equals(confirmarPassword)) {
-            request.setAttribute("error", "Las contraseñas no coinciden");
-            RequestDispatcher dispatcher = request.getRequestDispatcher("registroUsuario.jsp");
-            dispatcher.forward(request, response);
-            return;
-        }
-        
-        // Validar que el username no esté vacío y tenga formato válido
+        // Validaciones básicas del lado del servidor
         if (username == null || username.trim().isEmpty()) {
             request.setAttribute("error", "El username es requerido");
+            request.setAttribute("formData", request.getParameterMap());
             RequestDispatcher dispatcher = request.getRequestDispatcher("registroUsuario.jsp");
             dispatcher.forward(request, response);
             return;
         }
         
-        // Validar formato de username (solo letras, números y guiones bajos)
+        if (password == null || password.trim().isEmpty()) {
+            request.setAttribute("error", "La contraseña es requerida");
+            request.setAttribute("formData", request.getParameterMap());
+            RequestDispatcher dispatcher = request.getRequestDispatcher("registroUsuario.jsp");
+            dispatcher.forward(request, response);
+            return;
+        }
+        
+        if (nombres == null || nombres.trim().isEmpty()) {
+            request.setAttribute("error", "Los nombres son requeridos");
+            request.setAttribute("formData", request.getParameterMap());
+            RequestDispatcher dispatcher = request.getRequestDispatcher("registroUsuario.jsp");
+            dispatcher.forward(request, response);
+            return;
+        }
+        
+        if (apellidos == null || apellidos.trim().isEmpty()) {
+            request.setAttribute("error", "Los apellidos son requeridos");
+            request.setAttribute("formData", request.getParameterMap());
+            RequestDispatcher dispatcher = request.getRequestDispatcher("registroUsuario.jsp");
+            dispatcher.forward(request, response);
+            return;
+        }
+        
+        if (correo == null || correo.trim().isEmpty()) {
+            request.setAttribute("error", "El correo electrónico es requerido");
+            request.setAttribute("formData", request.getParameterMap());
+            RequestDispatcher dispatcher = request.getRequestDispatcher("registroUsuario.jsp");
+            dispatcher.forward(request, response);
+            return;
+        }
+        
+        if (telefono == null || telefono.trim().isEmpty()) {
+            request.setAttribute("error", "El teléfono es requerido");
+            request.setAttribute("formData", request.getParameterMap());
+            RequestDispatcher dispatcher = request.getRequestDispatcher("registroUsuario.jsp");
+            dispatcher.forward(request, response);
+            return;
+        }
+        
+        // Validar formato de username
         if (!username.matches("^[a-zA-Z0-9_]+$")) {
             request.setAttribute("error", "El username solo puede contener letras, números y guiones bajos");
+            request.setAttribute("formData", request.getParameterMap());
             RequestDispatcher dispatcher = request.getRequestDispatcher("registroUsuario.jsp");
             dispatcher.forward(request, response);
             return;
         }
         
-        Usuario usuario = obtenerUsuarioDesdeFormulario(request);
+        // Validar formato de correo
+        if (!correo.matches("^[\\w\\.-]+@[\\w\\.-]+\\.[a-zA-Z]{2,}$")) {
+            request.setAttribute("error", "Formato de correo electrónico inválido");
+            request.setAttribute("formData", request.getParameterMap());
+            RequestDispatcher dispatcher = request.getRequestDispatcher("registroUsuario.jsp");
+            dispatcher.forward(request, response);
+            return;
+        }
+        
+        // Validar nivel de usuario
+        int idNivel;
+        try {
+            idNivel = Integer.parseInt(nivelStr);
+        } catch (NumberFormatException e) {
+            request.setAttribute("error", "Debe seleccionar un nivel de usuario válido");
+            request.setAttribute("formData", request.getParameterMap());
+            RequestDispatcher dispatcher = request.getRequestDispatcher("registroUsuario.jsp");
+            dispatcher.forward(request, response);
+            return;
+        }
+        
+        // Crear el objeto Usuario
+        Usuario usuario = new Usuario();
+        usuario.setUsername(username.trim());
+        usuario.setPassword(password);
+        usuario.setNombresUsuario(nombres.trim());
+        usuario.setApellidosUsuario(apellidos.trim());
+        usuario.setCorreoUsuario(correo.trim());
+        usuario.setTelefonoUsuario(telefono.trim());
+        usuario.setIdNivelUsuario(idNivel);
+        
+        // Intentar insertar el usuario
         boolean exito = usuarioDAO.insertarUsuario(usuario);
         
         if (exito) {
             response.sendRedirect("UsuarioServlet?accion=listar&mensaje=Usuario registrado exitosamente");
         } else {
-            request.setAttribute("error", "Error al registrar el usuario. Posiblemente el username ya existe.");
+            request.setAttribute("error", "Error al registrar el usuario. El username ya existe o hay un problema en la base de datos.");
+            request.setAttribute("formData", request.getParameterMap());
             RequestDispatcher dispatcher = request.getRequestDispatcher("registroUsuario.jsp");
             dispatcher.forward(request, response);
         }
@@ -134,86 +215,153 @@ public class UsuarioServlet extends HttpServlet {
 
     private void eliminarUsuario(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, IOException {
-        int id = Integer.parseInt(request.getParameter("id"));
-        boolean exito = usuarioDAO.eliminarUsuario(id);
+        String idStr = request.getParameter("id");
+        if (idStr == null || idStr.trim().isEmpty()) {
+            response.sendRedirect("UsuarioServlet?accion=listar&error=ID de usuario inválido");
+            return;
+        }
         
-        if (exito) {
-            response.sendRedirect("UsuarioServlet?accion=listar&mensaje=Usuario eliminado exitosamente");
-        } else {
-            response.sendRedirect("UsuarioServlet?accion=listar&error=Error al eliminar el usuario");
+        try {
+            int id = Integer.parseInt(idStr);
+            boolean exito = usuarioDAO.eliminarUsuario(id);
+            
+            if (exito) {
+                response.sendRedirect("UsuarioServlet?accion=listar&mensaje=Usuario eliminado exitosamente");
+            } else {
+                response.sendRedirect("UsuarioServlet?accion=listar&error=Error al eliminar el usuario");
+            }
+        } catch (NumberFormatException e) {
+            response.sendRedirect("UsuarioServlet?accion=listar&error=ID de usuario inválido");
         }
     }
 
     private void mostrarFormularioEditar(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, ServletException, IOException {
-        int id = Integer.parseInt(request.getParameter("id"));
-        Usuario usuario = usuarioDAO.obtenerUsuarioPorId(id);
-        request.setAttribute("usuario", usuario);
-        RequestDispatcher dispatcher = request.getRequestDispatcher("registroUsuario.jsp");
-        dispatcher.forward(request, response);
+        String idStr = request.getParameter("id");
+        if (idStr == null || idStr.trim().isEmpty()) {
+            response.sendRedirect("UsuarioServlet?accion=listar&error=ID de usuario inválido");
+            return;
+        }
+        
+        try {
+            int id = Integer.parseInt(idStr);
+            Usuario usuario = usuarioDAO.obtenerUsuarioPorId(id);
+            if (usuario != null) {
+                request.setAttribute("usuario", usuario);
+                RequestDispatcher dispatcher = request.getRequestDispatcher("registroUsuario.jsp");
+                dispatcher.forward(request, response);
+            } else {
+                response.sendRedirect("UsuarioServlet?accion=listar&error=Usuario no encontrado");
+            }
+        } catch (NumberFormatException e) {
+            response.sendRedirect("UsuarioServlet?accion=listar&error=ID de usuario inválido");
+        }
     }
 
     private void actualizarUsuario(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, IOException, ServletException {
         
-        String username = request.getParameter("username");
-        int idUsuario = Integer.parseInt(request.getParameter("id_usuario"));
+        String idStr = request.getParameter("id_usuario");
+        if (idStr == null || idStr.trim().isEmpty()) {
+            response.sendRedirect("UsuarioServlet?accion=listar&error=ID de usuario inválido");
+            return;
+        }
         
-        // Validar que el username no esté vacío
+        int idUsuario;
+        try {
+            idUsuario = Integer.parseInt(idStr);
+        } catch (NumberFormatException e) {
+            response.sendRedirect("UsuarioServlet?accion=listar&error=ID de usuario inválido");
+            return;
+        }
+        
+        // Obtener el usuario actual para comparar
+        Usuario usuarioActual = usuarioDAO.obtenerUsuarioPorId(idUsuario);
+        if (usuarioActual == null) {
+            response.sendRedirect("UsuarioServlet?accion=listar&error=Usuario no encontrado");
+            return;
+        }
+        
+        // Obtener parámetros del formulario
+        String username = request.getParameter("username");
+        String password = request.getParameter("password");
+        String nombres = request.getParameter("nombres_usuario");
+        String apellidos = request.getParameter("apellidos_usuario");
+        String correo = request.getParameter("correo_usuario");
+        String telefono = request.getParameter("telefono_usuario");
+        String nivelStr = request.getParameter("id_nivel_usuario");
+        
+        // Validaciones básicas
         if (username == null || username.trim().isEmpty()) {
             request.setAttribute("error", "El username es requerido");
-            Usuario usuario = usuarioDAO.obtenerUsuarioPorId(idUsuario);
-            request.setAttribute("usuario", usuario);
+            request.setAttribute("usuario", usuarioActual);
+            RequestDispatcher dispatcher = request.getRequestDispatcher("registroUsuario.jsp");
+            dispatcher.forward(request, response);
+            return;
+        }
+        
+        // Validar formato de username
+        if (!username.matches("^[a-zA-Z0-9_]+$")) {
+            request.setAttribute("error", "El username solo puede contener letras, números y guiones bajos");
+            request.setAttribute("usuario", usuarioActual);
             RequestDispatcher dispatcher = request.getRequestDispatcher("registroUsuario.jsp");
             dispatcher.forward(request, response);
             return;
         }
         
         // Validar que el username no esté duplicado (excluyendo el usuario actual)
-        if (usuarioDAO.existeUsernameExcluyendoId(username, idUsuario)) {
+        if (usuarioDAO.existeUsernameExcluyendoId(username.trim(), idUsuario)) {
             request.setAttribute("error", "El username ya existe");
-            Usuario usuario = usuarioDAO.obtenerUsuarioPorId(idUsuario);
-            request.setAttribute("usuario", usuario);
+            request.setAttribute("usuario", usuarioActual);
             RequestDispatcher dispatcher = request.getRequestDispatcher("registroUsuario.jsp");
             dispatcher.forward(request, response);
             return;
         }
         
-        Usuario usuario = obtenerUsuarioDesdeFormulario(request);
-        usuario.setIdUsuario(idUsuario);
-        boolean exito = usuarioDAO.actualizarUsuario(usuario);
+        // Validar formato de correo
+        if (correo != null && !correo.trim().isEmpty() && !correo.matches("^[\\w\\.-]+@[\\w\\.-]+\\.[a-zA-Z]{2,}$")) {
+            request.setAttribute("error", "Formato de correo electrónico inválido");
+            request.setAttribute("usuario", usuarioActual);
+            RequestDispatcher dispatcher = request.getRequestDispatcher("registroUsuario.jsp");
+            dispatcher.forward(request, response);
+            return;
+        }
+        
+        // Validar nivel de usuario
+        int idNivel;
+        try {
+            idNivel = Integer.parseInt(nivelStr);
+        } catch (NumberFormatException e) {
+            request.setAttribute("error", "Debe seleccionar un nivel de usuario válido");
+            request.setAttribute("usuario", usuarioActual);
+            RequestDispatcher dispatcher = request.getRequestDispatcher("registroUsuario.jsp");
+            dispatcher.forward(request, response);
+            return;
+        }
+        
+        // Actualizar los datos del usuario
+        usuarioActual.setUsername(username.trim());
+        usuarioActual.setNombresUsuario(nombres != null ? nombres.trim() : usuarioActual.getNombresUsuario());
+        usuarioActual.setApellidosUsuario(apellidos != null ? apellidos.trim() : usuarioActual.getApellidosUsuario());
+        usuarioActual.setCorreoUsuario(correo != null ? correo.trim() : usuarioActual.getCorreoUsuario());
+        usuarioActual.setTelefonoUsuario(telefono != null ? telefono.trim() : usuarioActual.getTelefonoUsuario());
+        usuarioActual.setIdNivelUsuario(idNivel);
+        
+        // Solo actualizar la contraseña si se proporciona una nueva
+        if (password != null && !password.trim().isEmpty()) {
+            usuarioActual.setPassword(password);
+        }
+        
+        // Intentar actualizar el usuario
+        boolean exito = usuarioDAO.actualizarUsuario(usuarioActual);
         
         if (exito) {
             response.sendRedirect("UsuarioServlet?accion=listar&mensaje=Usuario actualizado exitosamente");
         } else {
             request.setAttribute("error", "Error al actualizar el usuario");
-            request.setAttribute("usuario", usuario);
+            request.setAttribute("usuario", usuarioActual);
             RequestDispatcher dispatcher = request.getRequestDispatcher("registroUsuario.jsp");
             dispatcher.forward(request, response);
         }
-    }
-
-    private Usuario obtenerUsuarioDesdeFormulario(HttpServletRequest request) {
-        Usuario usuario = new Usuario();
-        
-        // Validar y obtener parámetros
-        String idNivelStr = request.getParameter("id_nivel_usuario");
-        if (idNivelStr != null && !idNivelStr.trim().isEmpty()) {
-            usuario.setIdNivelUsuario(Integer.parseInt(idNivelStr));
-        }
-        
-        usuario.setUsername(request.getParameter("username"));
-        usuario.setNombresUsuario(request.getParameter("nombres_usuario"));
-        usuario.setApellidosUsuario(request.getParameter("apellidos_usuario"));
-        usuario.setCorreoUsuario(request.getParameter("correo_usuario"));
-        usuario.setTelefonoUsuario(request.getParameter("telefono_usuario"));
-        
-        String password = request.getParameter("password");
-        if (password != null && !password.trim().isEmpty()) {
-            // Aquí puedes agregar encriptación si lo deseas
-            usuario.setPassword(password);
-        }
-        
-        return usuario;
     }
 }
