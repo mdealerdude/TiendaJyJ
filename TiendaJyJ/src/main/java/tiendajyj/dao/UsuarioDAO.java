@@ -33,6 +33,13 @@ public class UsuarioDAO {
                 usuario.setCorreoUsuario(rs.getString("correo_usuario"));
                 usuario.setTelefonoUsuario(rs.getString("telefono_usuario"));
                 usuario.setPassword(rs.getString("password"));
+                // Agregar fechas si existen en la tabla
+                try {
+                    usuario.setFechaCreacionUsuario(rs.getTimestamp("fecha_creacion_usuario"));
+                    usuario.setFechaActualizacionUsuario(rs.getTimestamp("fecha_actualizacion_usuario"));
+                } catch (SQLException e) {
+                    // Las fechas son opcionales
+                }
                 lista.add(usuario);
             }
 
@@ -60,7 +67,13 @@ public class UsuarioDAO {
                     usuario.setCorreoUsuario(rs.getString("correo_usuario"));
                     usuario.setTelefonoUsuario(rs.getString("telefono_usuario"));
                     usuario.setPassword(rs.getString("password"));
-                   
+                    // Agregar fechas si existen
+                    try {
+                        usuario.setFechaCreacionUsuario(rs.getTimestamp("fecha_creacion_usuario"));
+                        usuario.setFechaActualizacionUsuario(rs.getTimestamp("fecha_actualizacion_usuario"));
+                    } catch (SQLException e) {
+                        // Las fechas son opcionales
+                    }
                 }
             }
         } catch (SQLException e) {
@@ -71,7 +84,8 @@ public class UsuarioDAO {
     }
 
     public boolean insertarUsuario(Usuario usuario) {
-        String sql = "INSERT INTO usuarios (id_nivel_usuario, username, nombres_usuario, apellidos_usuario, correo_usuario, telefono_usuario, password, fecha_creacion_usuario, fecha_actualizacion_usuario) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        // Consulta simplificada sin fechas (la base de datos las manejará automáticamente)
+        String sql = "INSERT INTO usuarios (id_nivel_usuario, username, nombres_usuario, apellidos_usuario, correo_usuario, telefono_usuario, password) VALUES (?, ?, ?, ?, ?, ?, ?)";
 
         try (PreparedStatement st = conn.prepareStatement(sql)) {
             st.setInt(1, usuario.getIdNivelUsuario());
@@ -81,7 +95,6 @@ public class UsuarioDAO {
             st.setString(5, usuario.getCorreoUsuario());
             st.setString(6, usuario.getTelefonoUsuario());
             st.setString(7, usuario.getPassword());
-
 
             return st.executeUpdate() > 0;
 
@@ -92,7 +105,8 @@ public class UsuarioDAO {
     }
 
     public boolean actualizarUsuario(Usuario usuario) {
-        String sql = "UPDATE usuarios SET id_nivel_usuario = ?, username = ?, nombres_usuario = ?, apellidos_usuario = ?, correo_usuario = ?, telefono_usuario = ?, password = ?, fecha_actualizacion_usuario = ? WHERE id_usuario = ?";
+        // Consulta corregida - removemos fecha_actualizacion_usuario del SET ya que falta el parámetro
+        String sql = "UPDATE usuarios SET id_nivel_usuario = ?, username = ?, nombres_usuario = ?, apellidos_usuario = ?, correo_usuario = ?, telefono_usuario = ?, password = ? WHERE id_usuario = ?";
 
         try (PreparedStatement st = conn.prepareStatement(sql)) {
             st.setInt(1, usuario.getIdNivelUsuario());
@@ -102,8 +116,7 @@ public class UsuarioDAO {
             st.setString(5, usuario.getCorreoUsuario());
             st.setString(6, usuario.getTelefonoUsuario());
             st.setString(7, usuario.getPassword());
-
-            st.setInt(9, usuario.getIdUsuario());
+            st.setInt(8, usuario.getIdUsuario()); // Corregido: era posición 9, ahora es 8
 
             return st.executeUpdate() > 0;
 
@@ -123,6 +136,12 @@ public class UsuarioDAO {
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
+        }
+    }
+    
+    public void cerrarConexion() throws SQLException {
+        if (conn != null && !conn.isClosed()) {
+            conn.close();
         }
     }
 }

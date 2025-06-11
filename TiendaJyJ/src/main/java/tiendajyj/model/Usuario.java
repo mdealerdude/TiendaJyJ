@@ -1,6 +1,6 @@
 package tiendajyj.model;
 
-import java.util.Date;
+import java.sql.Timestamp;
 
 public class Usuario {
     private int idUsuario;
@@ -11,7 +11,26 @@ public class Usuario {
     private String correoUsuario;
     private String telefonoUsuario;
     private String password;
+    private Timestamp fechaCreacionUsuario;
+    private Timestamp fechaActualizacionUsuario;
 
+    // Constructor vacío
+    public Usuario() {
+    }
+
+    // Constructor con parámetros principales
+    public Usuario(int idNivelUsuario, String username, String nombresUsuario, 
+                   String apellidosUsuario, String correoUsuario, String telefonoUsuario, String password) {
+        this.idNivelUsuario = idNivelUsuario;
+        this.username = username;
+        this.nombresUsuario = nombresUsuario;
+        this.apellidosUsuario = apellidosUsuario;
+        this.correoUsuario = correoUsuario;
+        this.telefonoUsuario = telefonoUsuario;
+        this.password = password;
+    }
+
+    // Getters y Setters
     public int getIdUsuario() {
         return idUsuario;
     }
@@ -75,6 +94,33 @@ public class Usuario {
     public void setPassword(String password) {
         this.password = password;
     }
-    
-    
+
+    public Timestamp getFechaCreacionUsuario() {
+        return fechaCreacionUsuario;
+    }
+
+    public void setFechaCreacionUsuario(Timestamp fechaCreacionUsuario) {
+        this.fechaCreacionUsuario = fechaCreacionUsuario;
+    }
+
+    public Timestamp getFechaActualizacionUsuario() {
+        return fechaActualizacionUsuario;
+    }
+
+    public void setFechaActualizacionUsuario(Timestamp fechaActualizacionUsuario) {
+        this.fechaActualizacionUsuario = fechaActualizacionUsuario;
+    }
+
+    @Override
+    public String toString() {
+        return "Usuario{" +
+                "idUsuario=" + idUsuario +
+                ", idNivelUsuario=" + idNivelUsuario +
+                ", username='" + username + '\'' +
+                ", nombresUsuario='" + nombresUsuario + '\'' +
+                ", apellidosUsuario='" + apellidosUsuario + '\'' +
+                ", correoUsuario='" + correoUsuario + '\'' +
+                ", telefonoUsuario='" + telefonoUsuario + '\'' +
+                '}';
+    }
 }
