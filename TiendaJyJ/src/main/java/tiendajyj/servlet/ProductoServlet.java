@@ -222,55 +222,60 @@ public class ProductoServlet extends HttpServlet {
     }
 
     private Producto obtenerProductoDesdeFormulario(HttpServletRequest request) {
-        Producto producto = new Producto();
-        
-        // Obtener parámetros del formulario
-        String nombreProducto = request.getParameter("nombre_producto");
-        String idMarcaStr = request.getParameter("id_marca");
-        String stockStr = request.getParameter("stock_producto");
-        String precioStr = request.getParameter("precio_producto");
-        
-        // Validar y establecer valores
-        if (nombreProducto != null && !nombreProducto.trim().isEmpty()) {
-            producto.setNombreProducto(nombreProducto.trim());
-        }
-        
-        if (idMarcaStr != null && !idMarcaStr.trim().isEmpty()) {
-            try {
-                producto.setIdMarca(Integer.parseInt(idMarcaStr));
-            } catch (NumberFormatException e) {
-                producto.setIdMarca(0);
-            }
-        }
-        
-        if (stockStr != null && !stockStr.trim().isEmpty()) {
-            try {
-                producto.setStockProducto(Integer.parseInt(stockStr));
-            } catch (NumberFormatException e) {
-                producto.setStockProducto(0);
-            }
-        }
-        
-        if (precioStr != null && !precioStr.trim().isEmpty()) {
-            try {
-                producto.setPrecioProducto(new BigDecimal(precioStr));
-            } catch (NumberFormatException e) {
-                producto.setPrecioProducto(BigDecimal.ZERO);
-            }
-        }
-        
-        // Obtener usuario de la sesión
-        HttpSession session = request.getSession();
-        Integer idUsuario = (Integer) session.getAttribute("id_usuario");
-        if (idUsuario != null) {
-            producto.setIdUsuario(idUsuario);
-        } else {
-            // Valor temporal mientras implementas usuarios completamente
-            producto.setIdUsuario(1);
-        }
-        
-        return producto;
+    Producto producto = new Producto();
+    
+    // Obtener parámetros del formulario
+    String nombreProducto = request.getParameter("nombre_producto");
+    String idMarcaStr = request.getParameter("id_marca");
+    String stockStr = request.getParameter("stock_producto");
+    String precioStr = request.getParameter("precio_producto");
+    
+    // Validar y establecer valores
+    if (nombreProducto != null && !nombreProducto.trim().isEmpty()) {
+        producto.setNombreProducto(nombreProducto.trim());
     }
+    
+    if (idMarcaStr != null && !idMarcaStr.trim().isEmpty()) {
+        try {
+            producto.setIdMarca(Integer.parseInt(idMarcaStr));
+        } catch (NumberFormatException e) {
+            producto.setIdMarca(0);
+        }
+    }
+    
+    if (stockStr != null && !stockStr.trim().isEmpty()) {
+        try {
+            producto.setStockProducto(Integer.parseInt(stockStr));
+        } catch (NumberFormatException e) {
+            producto.setStockProducto(0);
+        }
+    }
+    
+    if (precioStr != null && !precioStr.trim().isEmpty()) {
+        try {
+            producto.setPrecioProducto(new BigDecimal(precioStr));
+        } catch (NumberFormatException e) {
+            producto.setPrecioProducto(BigDecimal.ZERO);
+        }
+    }
+    
+    // Obtener usuario de la sesión con validación
+    HttpSession session = request.getSession();
+    Integer idUsuario = (Integer) session.getAttribute("id_usuario");
+    
+    if (idUsuario != null) {
+        producto.setIdUsuario(idUsuario);
+    } else {
+        // Si no hay usuario en sesión, usar un valor por defecto o lanzar excepción
+        // Opción 1: Usar valor por defecto (temporal)
+        producto.setIdUsuario(1);
+        
+        // Opción 2: Lanzar excepción (recomendado para producción)
+        // throw new IllegalStateException("Usuario no autenticado. Debe iniciar sesión.");
+    }
+    
+    return producto;
+}
 
     @Override
     public void destroy() {

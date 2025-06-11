@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
- */
 package tiendajyj.servlet;
 
 import java.io.IOException;
@@ -16,10 +12,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-/**
- *
- * @author juandiaz
- */
 @WebServlet(name = "LoginServlet", urlPatterns = {"/LoginServlet"})
 public class LoginServlet extends HttpServlet { 
 
@@ -27,14 +19,15 @@ public class LoginServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
         throws ServletException, IOException {
 
-        String username  = request.getParameter("username");
+        String username = request.getParameter("username");
         String password = request.getParameter("password");
 
         try {
             Conexion con = new Conexion();
             Connection conn = con.getConnection();
 
-            String sql = "SELECT username FROM usuarios WHERE username = ? AND password = ?";
+            // Modificar la consulta para obtener también el id_usuario
+            String sql = "SELECT id_usuario, username FROM usuarios WHERE username = ? AND password = ?";
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, username);
             ps.setString(2, password);
@@ -43,7 +36,9 @@ public class LoginServlet extends HttpServlet {
 
             if (rs.next()) {
                 HttpSession session = request.getSession(true);
+                // Guardar tanto el username como el id_usuario en la sesión
                 session.setAttribute("USER", username);
+                session.setAttribute("id_usuario", rs.getInt("id_usuario"));
                 response.sendRedirect("principal.jsp");
             } else {
                 response.sendRedirect("index.jsp?error=1");
@@ -57,5 +52,4 @@ public class LoginServlet extends HttpServlet {
             throw new ServletException("Error al conectar con la base de datos", e);
         }
     }
-  }
-
+}

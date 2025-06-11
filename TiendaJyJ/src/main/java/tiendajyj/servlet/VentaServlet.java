@@ -167,22 +167,30 @@ public class VentaServlet extends HttpServlet {
     }
 
     private Venta obtenerVentaDesdeFormulario(HttpServletRequest request) {
-        Venta venta = new Venta();
-        venta.setId_cliente(Integer.parseInt(request.getParameter("id_cliente")));
-        venta.setId_producto(Integer.parseInt(request.getParameter("id_producto")));
-        venta.setCantidad_producto(Integer.parseInt(request.getParameter("cantidad_producto")));
+    Venta venta = new Venta();
+    venta.setId_cliente(Integer.parseInt(request.getParameter("id_cliente")));
+    venta.setId_producto(Integer.parseInt(request.getParameter("id_producto")));
+    venta.setCantidad_producto(Integer.parseInt(request.getParameter("cantidad_producto")));
+    
+    // Manejo de fechas automático
+    venta.setFecha_inserccion_venta(new Date());
+    venta.setFecha_actualizacion_venta(new Date());
+    
+    // Obtener el ID del usuario de la sesión con validación
+    HttpSession session = request.getSession();
+    Integer idUsuario = (Integer) session.getAttribute("id_usuario");
+    
+    if (idUsuario != null) {
+        venta.setId_usuario(idUsuario);
+    } else {
+        // Si no hay usuario en sesión, usar un valor por defecto o lanzar excepción
+        // Opción 1: Usar valor por defecto (temporal)
+        //venta.setId_usuario(1);
         
-        // Manejo de fechas automático
-        venta.setFecha_inserccion_venta(new Date());
-        venta.setFecha_actualizacion_venta(new Date());
-        
-        // Si tienes usuarios en sesión, deberías obtener el ID así:
-        HttpSession session = request.getSession();
-        venta.setId_usuario((Integer) session.getAttribute("id_usuario"));
-        
-        // Valor temporal mientras se implementa usuarios:
-        //venta.setId_usuario(1); // Reemplazar con lógica real de usuario
-        
-        return venta;
+        // Opción 2: Lanzar excepción (recomendado para producción)
+        throw new IllegalStateException("Usuario no autenticado. Debe iniciar sesión.");
     }
+    
+    return venta;
 }
+    }
