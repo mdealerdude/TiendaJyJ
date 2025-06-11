@@ -6,9 +6,13 @@ tiendajyj\servlet\ClienteServlet.class
 tiendajyj\dao\UsuarioDao.class
 tiendajyj\servlet\Conexion.class
 sv\edu\infravenz\tiendajyj\resources\JakartaEE11Resource.class
+tiendajyj\model\Producto.class
+tiendajyj\model\Venta.class
 tiendajyj\model\Cliente.class
 tiendajyj\model\Empleado.class
 sv\edu\infravenz\tiendajyj\JakartaRestConfiguration.class
 tiendajyj\dao\ClienteDao.class
+tiendajyj\servlet\VentaServlet.class
+tiendajyj\dao\VentaDao.class
 tiendajyj\servlet\CerrarSesion.class
 tiendajyj\servlet\UsuarioServlet.class

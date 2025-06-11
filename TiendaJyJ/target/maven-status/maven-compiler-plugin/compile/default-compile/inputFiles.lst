@@ -3,12 +3,16 @@ C:\Users\MINEDUCYT\OneDrive\Desktop\hope\TiendaJyJ\src\main\java\sv\edu\infraven
 C:\Users\MINEDUCYT\OneDrive\Desktop\hope\TiendaJyJ\src\main\java\tiendajyj\dao\ClienteDao.java
 C:\Users\MINEDUCYT\OneDrive\Desktop\hope\TiendaJyJ\src\main\java\tiendajyj\dao\EmpleadoDAO.java
 C:\Users\MINEDUCYT\OneDrive\Desktop\hope\TiendaJyJ\src\main\java\tiendajyj\dao\UsuarioDao.java
+C:\Users\MINEDUCYT\OneDrive\Desktop\hope\TiendaJyJ\src\main\java\tiendajyj\dao\VentaDao.java
 C:\Users\MINEDUCYT\OneDrive\Desktop\hope\TiendaJyJ\src\main\java\tiendajyj\model\Cliente.java
 C:\Users\MINEDUCYT\OneDrive\Desktop\hope\TiendaJyJ\src\main\java\tiendajyj\model\Empleado.java
+C:\Users\MINEDUCYT\OneDrive\Desktop\hope\TiendaJyJ\src\main\java\tiendajyj\model\Producto.java
 C:\Users\MINEDUCYT\OneDrive\Desktop\hope\TiendaJyJ\src\main\java\tiendajyj\model\Usuario.java
+C:\Users\MINEDUCYT\OneDrive\Desktop\hope\TiendaJyJ\src\main\java\tiendajyj\model\Venta.java
 C:\Users\MINEDUCYT\OneDrive\Desktop\hope\TiendaJyJ\src\main\java\tiendajyj\servlet\CerrarSesion.java
 C:\Users\MINEDUCYT\OneDrive\Desktop\hope\TiendaJyJ\src\main\java\tiendajyj\servlet\ClienteServlet.java
 C:\Users\MINEDUCYT\OneDrive\Desktop\hope\TiendaJyJ\src\main\java\tiendajyj\servlet\Conexion.java
 C:\Users\MINEDUCYT\OneDrive\Desktop\hope\TiendaJyJ\src\main\java\tiendajyj\servlet\EmpleadoServlet.java
 C:\Users\MINEDUCYT\OneDrive\Desktop\hope\TiendaJyJ\src\main\java\tiendajyj\servlet\LoginServlet.java
 C:\Users\MINEDUCYT\OneDrive\Desktop\hope\TiendaJyJ\src\main\java\tiendajyj\servlet\UsuarioServlet.java
+C:\Users\MINEDUCYT\OneDrive\Desktop\hope\TiendaJyJ\src\main\java\tiendajyj\servlet\VentaServlet.java

@@ -1,5 +1,3 @@
-
-
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 
 <!-- Navbar -->
@@ -18,7 +16,7 @@
                         <a class="nav-link active" href="principal.jsp"><i class="fas fa-home me-1"></i>Inicio</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="UsuarioServlet?accion=listar"><i class="fas fa-cash-register me-1"></i>Usuarios</a>
+                        <a class="nav-link" href="UsuarioServlet?accion=listar"><i class="fas fa-users me-1"></i>Usuarios</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="prouctos.jsp"><i class="fas fa-pills me-1"></i>Productos</a>
@@ -27,7 +25,10 @@
                         <a class="nav-link" href="EmpleadoServlet?accion=listar"><i class="fas fa-user-md me-1"></i>Empleados</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="ClienteServlet?accion=listar"><i class="fas fa-chart-bar me-1"></i>Clientes</a>
+                        <a class="nav-link" href="ClienteServlet?accion=listar"><i class="fas fa-user-friends me-1"></i>Clientes</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="VentaServlet?accion=listar"><i class="fas fa-shopping-cart me-1"></i>Ventas</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link text-warning" href="CerrarSesion"><i class="fas fa-sign-out-alt me-1"></i>Salir</a>
@@ -36,4 +37,3 @@
             </div>
         </div>
     </nav>
-
