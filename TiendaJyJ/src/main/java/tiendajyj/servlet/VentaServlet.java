@@ -180,8 +180,8 @@ public class VentaServlet extends HttpServlet {
         HttpSession session = request.getSession();
         venta.setId_usuario((Integer) session.getAttribute("id_usuario"));
         
-        // Valor temporal mientras implementas usuarios:
-        venta.setId_usuario(1); // Reemplazar con lógica real de usuario
+        // Valor temporal mientras se implementa usuarios:
+        //venta.setId_usuario(1); // Reemplazar con lógica real de usuario
         
         return venta;
     }

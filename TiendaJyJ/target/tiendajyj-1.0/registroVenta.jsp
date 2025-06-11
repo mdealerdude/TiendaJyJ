@@ -82,15 +82,15 @@
                                             <%
                                                 if (productos != null) {
                                                     for (Producto producto : productos) {
-                                                        boolean selected = esEdicion && venta.getId_producto() == producto.getId_producto();
+                                                        boolean selected = esEdicion && venta.getId_producto() == producto.getIdProducto();
                                             %>
-                                                <option value="<%= producto.getId_producto() %>" 
-                                                        data-precio="<%= producto.getPrecio_producto() %>"
-                                                        data-stock="<%= producto.getStock_producto() %>"
+                                                <option value="<%= producto.getIdProducto() %>" 
+                                                        data-precio="<%= producto.getPrecioProducto() %>"
+                                                        data-stock="<%= producto.getStockProducto() %>"
                                                         <%= selected ? "selected" : "" %>>
-                                                    <%= producto.getNombre_producto() %> - 
-                                                    <%= producto.getNombre_marca() %> 
-                                                    (Stock: <%= producto.getStock_producto() %>)
+                                                    <%= producto.getNombreProducto() %> - 
+                                                    <%= producto.getNombreMarca() %> 
+                                                    (Stock: <%= producto.getStockProducto() %>)
                                                 </option>
                                             <% 
                                                     }

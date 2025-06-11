@@ -1,21 +1,11 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package tiendajyj.dao;
 
-
-
-
 import tiendajyj.model.Usuario;
+import tiendajyj.model.NivelAcceso;
 import tiendajyj.servlet.Conexion;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-
-import java.sql.SQLException;
-
-import java.sql.Connection;
 
 public class UsuarioDao {
 
@@ -28,7 +18,10 @@ public class UsuarioDao {
 
     public List<Usuario> listarUsuarios() {
         List<Usuario> lista = new ArrayList<>();
-        String sql = "SELECT * FROM usuarios ORDER BY fecha_creacion_usuario DESC";
+        String sql = "SELECT u.*, n.nombre_nivel_acceso " +
+                    "FROM usuarios u " +
+                    "INNER JOIN nivel_acceso n ON u.id_nivel_usuario = n.id_nivel_acceso " +
+                    "ORDER BY u.fecha_creacion_usuario DESC";
 
         try (PreparedStatement st = conn.prepareStatement(sql);
              ResultSet rs = st.executeQuery()) {
@@ -45,10 +38,12 @@ public class UsuarioDao {
                 usr.setPassword(rs.getString("password"));
                 usr.setFecha_creacion_usuario(rs.getTimestamp("fecha_creacion_usuario"));
                 usr.setFecha_actualizacion_usuario(rs.getTimestamp("fecha_actualizacion_usuario"));
+                usr.setNombre_nivel_acceso(rs.getString("nombre_nivel_acceso"));
                 lista.add(usr);
             }
 
         } catch (SQLException e) {
+            System.err.println("Error al listar usuarios: " + e.getMessage());
             e.printStackTrace();
         }
 
@@ -57,7 +52,10 @@ public class UsuarioDao {
 
     public Usuario obtenerUsuarioPorId(int id) {
         Usuario usr = null;
-        String sql = "SELECT * FROM usuarios WHERE id_usuario = ?";
+        String sql = "SELECT u.*, n.nombre_nivel_acceso " +
+                    "FROM usuarios u " +
+                    "INNER JOIN nivel_acceso n ON u.id_nivel_usuario = n.id_nivel_acceso " +
+                    "WHERE u.id_usuario = ?";
 
         try (PreparedStatement st = conn.prepareStatement(sql)) {
             st.setInt(1, id);
@@ -74,9 +72,11 @@ public class UsuarioDao {
                     usr.setPassword(rs.getString("password"));
                     usr.setFecha_creacion_usuario(rs.getTimestamp("fecha_creacion_usuario"));
                     usr.setFecha_actualizacion_usuario(rs.getTimestamp("fecha_actualizacion_usuario"));
+                    usr.setNombre_nivel_acceso(rs.getString("nombre_nivel_acceso"));
                 }
             }
         } catch (SQLException e) {
+            System.err.println("Error al obtener usuario por ID: " + e.getMessage());
             e.printStackTrace();
         }
 
@@ -85,7 +85,10 @@ public class UsuarioDao {
 
     public Usuario obtenerUsuarioPorUsername(String username) {
         Usuario usr = null;
-        String sql = "SELECT * FROM usuarios WHERE username = ?";
+        String sql = "SELECT u.*, n.nombre_nivel_acceso " +
+                    "FROM usuarios u " +
+                    "INNER JOIN nivel_acceso n ON u.id_nivel_usuario = n.id_nivel_acceso " +
+                    "WHERE u.username = ?";
 
         try (PreparedStatement st = conn.prepareStatement(sql)) {
             st.setString(1, username);
@@ -102,9 +105,11 @@ public class UsuarioDao {
                     usr.setPassword(rs.getString("password"));
                     usr.setFecha_creacion_usuario(rs.getTimestamp("fecha_creacion_usuario"));
                     usr.setFecha_actualizacion_usuario(rs.getTimestamp("fecha_actualizacion_usuario"));
+                    usr.setNombre_nivel_acceso(rs.getString("nombre_nivel_acceso"));
                 }
             }
         } catch (SQLException e) {
+            System.err.println("Error al obtener usuario por username: " + e.getMessage());
             e.printStackTrace();
         }
 
@@ -112,7 +117,9 @@ public class UsuarioDao {
     }
 
     public boolean insertarUsuario(Usuario usr) {
-        String sql = "INSERT INTO usuarios (id_nivel_usuario, username, nombres_usuario, apellidos_usuario, correo_usuario, telefono_usuario, password, fecha_creacion_usuario) VALUES (?, ?, ?, ?, ?, ?, ?, NOW())";
+        String sql = "INSERT INTO usuarios (id_nivel_usuario, username, nombres_usuario, apellidos_usuario, " +
+                    "correo_usuario, telefono_usuario, password, fecha_creacion_usuario) " +
+                    "VALUES (?, ?, ?, ?, ?, ?, ?, NOW())";
 
         try (PreparedStatement st = conn.prepareStatement(sql)) {
             st.setInt(1, usr.getId_nivel_usuario());
@@ -123,16 +130,20 @@ public class UsuarioDao {
             st.setString(6, usr.getTelefono_usuario());
             st.setString(7, usr.getPassword());
 
-            return st.executeUpdate() > 0;
+            int filasAfectadas = st.executeUpdate();
+            return filasAfectadas > 0;
 
         } catch (SQLException e) {
+            System.err.println("Error al insertar usuario: " + e.getMessage());
             e.printStackTrace();
             return false;
         }
     }
 
     public boolean actualizarUsuario(Usuario usr) {
-        String sql = "UPDATE usuarios SET id_nivel_usuario = ?, nombres_usuario = ?, apellidos_usuario = ?, correo_usuario = ?, telefono_usuario = ?, fecha_actualizacion_usuario = NOW() WHERE id_usuario = ?";
+        String sql = "UPDATE usuarios SET id_nivel_usuario = ?, nombres_usuario = ?, apellidos_usuario = ?, " +
+                    "correo_usuario = ?, telefono_usuario = ?, fecha_actualizacion_usuario = NOW() " +
+                    "WHERE id_usuario = ?";
        
         try (PreparedStatement st = conn.prepareStatement(sql)) {
             st.setInt(1, usr.getId_nivel_usuario());
@@ -142,9 +153,11 @@ public class UsuarioDao {
             st.setString(5, usr.getTelefono_usuario());
             st.setInt(6, usr.getId_usuario());
 
-            return st.executeUpdate() > 0;
+            int filasAfectadas = st.executeUpdate();
+            return filasAfectadas > 0;
 
         } catch (SQLException e) {
+            System.err.println("Error al actualizar usuario: " + e.getMessage());
             e.printStackTrace();
             return false;
         }
@@ -157,9 +170,11 @@ public class UsuarioDao {
             st.setString(1, nuevaPassword);
             st.setInt(2, id_usuario);
 
-            return st.executeUpdate() > 0;
+            int filasAfectadas = st.executeUpdate();
+            return filasAfectadas > 0;
 
         } catch (SQLException e) {
+            System.err.println("Error al actualizar password: " + e.getMessage());
             e.printStackTrace();
             return false;
         }
@@ -170,9 +185,11 @@ public class UsuarioDao {
 
         try (PreparedStatement st = conn.prepareStatement(sql)) {
             st.setInt(1, id);
-            return st.executeUpdate() > 0;
+            int filasAfectadas = st.executeUpdate();
+            return filasAfectadas > 0;
 
         } catch (SQLException e) {
+            System.err.println("Error al eliminar usuario: " + e.getMessage());
             e.printStackTrace();
             return false;
         }
@@ -189,6 +206,7 @@ public class UsuarioDao {
                 }
             }
         } catch (SQLException e) {
+            System.err.println("Error al verificar existencia de username: " + e.getMessage());
             e.printStackTrace();
         }
         
@@ -207,10 +225,33 @@ public class UsuarioDao {
                 }
             }
         } catch (SQLException e) {
+            System.err.println("Error al verificar username para actualizar: " + e.getMessage());
             e.printStackTrace();
         }
         
         return false;
+    }
+
+    public List<NivelAcceso> listarNivelesAcceso() {
+        List<NivelAcceso> niveles = new ArrayList<>();
+        String sql = "SELECT id_nivel_acceso, nombre_nivel_acceso FROM nivel_acceso ORDER BY nombre_nivel_acceso";
+        
+        try (PreparedStatement st = conn.prepareStatement(sql);
+             ResultSet rs = st.executeQuery()) {
+            
+            while (rs.next()) {
+                NivelAcceso nivel = new NivelAcceso();
+                nivel.setId_nivel_acceso(rs.getInt("id_nivel_acceso"));
+                nivel.setNombre_nivel_acceso(rs.getString("nombre_nivel_acceso"));
+                niveles.add(nivel);
+            }
+            
+        } catch (SQLException e) {
+            System.err.println("Error al listar niveles de acceso: " + e.getMessage());
+            e.printStackTrace();
+        }
+        
+        return niveles;
     }
 
     public void cerrarConexion() {
@@ -219,6 +260,7 @@ public class UsuarioDao {
                 conn.close();
             }
         } catch (SQLException e) {
+            System.err.println("Error al cerrar conexión: " + e.getMessage());
             e.printStackTrace();
         }
     }

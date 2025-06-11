@@ -19,13 +19,13 @@
                         <a class="nav-link" href="UsuarioServlet?accion=listar"><i class="fas fa-users me-1"></i>Usuarios</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="prouctos.jsp"><i class="fas fa-pills me-1"></i>Productos</a>
-                    </li>
-                    <li class="nav-item">
                         <a class="nav-link" href="EmpleadoServlet?accion=listar"><i class="fas fa-user-md me-1"></i>Empleados</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="ClienteServlet?accion=listar"><i class="fas fa-user-friends me-1"></i>Clientes</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="ProductoServlet?accion=listar"><i class="fas fa-user-friends me-1"></i>Productos</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="VentaServlet?accion=listar"><i class="fas fa-shopping-cart me-1"></i>Ventas</a>

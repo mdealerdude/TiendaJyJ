@@ -1,20 +1,9 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package tiendajyj.model;
-
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-
-
 
 import java.util.Date;
 
 /**
- *
+ * Modelo de Usuario con campo adicional para nombre del nivel de acceso
  * @author MINEDUCYT
  */
 public class Usuario {
@@ -28,6 +17,9 @@ public class Usuario {
     private String password;
     private Date fecha_creacion_usuario;
     private Date fecha_actualizacion_usuario;
+    
+    // Campo adicional para mostrar el nombre del nivel de acceso
+    private String nombre_nivel_acceso;
     
     // Constructors
     public Usuario() {
@@ -127,5 +119,28 @@ public class Usuario {
     
     public void setFecha_actualizacion_usuario(Date fecha_actualizacion_usuario) {
         this.fecha_actualizacion_usuario = fecha_actualizacion_usuario;
+    }
+
+    public String getNombre_nivel_acceso() {
+        return nombre_nivel_acceso;
+    }
+
+    public void setNombre_nivel_acceso(String nombre_nivel_acceso) {
+        this.nombre_nivel_acceso = nombre_nivel_acceso;
+    }
+    
+    // Método toString para debugging
+    @Override
+    public String toString() {
+        return "Usuario{" +
+                "id_usuario=" + id_usuario +
+                ", id_nivel_usuario=" + id_nivel_usuario +
+                ", username='" + username + '\'' +
+                ", nombres_usuario='" + nombres_usuario + '\'' +
+                ", apellidos_usuario='" + apellidos_usuario + '\'' +
+                ", correo_usuario='" + correo_usuario + '\'' +
+                ", telefono_usuario='" + telefono_usuario + '\'' +
+                ", nombre_nivel_acceso='" + nombre_nivel_acceso + '\'' +
+                '}';
     }
 }
