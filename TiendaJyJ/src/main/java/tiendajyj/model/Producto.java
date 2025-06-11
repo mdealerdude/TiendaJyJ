@@ -1,116 +1,136 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-package tiendajyj.model;
+package com.tiendajyj.model;
 
 import java.math.BigDecimal;
-import java.util.Date;
+import java.sql.Timestamp;
 
 /**
- *
- * @author MINEDUCYT
+ * Clase modelo para representar un Producto
  */
 public class Producto {
-    private int id_producto;
-    private int id_usuario;
-    private String nombre_producto;
-    private int id_marca;
-    private int stock_producto;
-    private BigDecimal precio_producto;
-    private Date fecha_inserccion_producto;
-    private Date fecha_actualizacion_producto;
+    private int idProducto;
+    private int idUsuario;
+    private String nombreProducto;
+    private int idMarca;
+    private String nombreMarca; // Para mostrar el nombre de la marca
+    private int stockProducto;
+    private BigDecimal precioProducto;
+    private Timestamp fechaInserccionProducto;
+    private Timestamp fechaActualizacionProducto;
     
-    // Campo adicional para mostrar nombre de marca
-    private String nombre_marca;
-
-    // Constructores
-    public Producto() {
+    // Constructor vacío
+    public Producto() {}
+    
+    // Constructor completo
+    public Producto(int idProducto, int idUsuario, String nombreProducto, 
+                   int idMarca, String nombreMarca, int stockProducto, 
+                   BigDecimal precioProducto, Timestamp fechaInserccionProducto, 
+                   Timestamp fechaActualizacionProducto) {
+        this.idProducto = idProducto;
+        this.idUsuario = idUsuario;
+        this.nombreProducto = nombreProducto;
+        this.idMarca = idMarca;
+        this.nombreMarca = nombreMarca;
+        this.stockProducto = stockProducto;
+        this.precioProducto = precioProducto;
+        this.fechaInserccionProducto = fechaInserccionProducto;
+        this.fechaActualizacionProducto = fechaActualizacionProducto;
     }
-
-    public Producto(int id_producto, int id_usuario, String nombre_producto, int id_marca,
-                   int stock_producto, BigDecimal precio_producto, Date fecha_inserccion_producto,
-                   Date fecha_actualizacion_producto) {
-        this.id_producto = id_producto;
-        this.id_usuario = id_usuario;
-        this.nombre_producto = nombre_producto;
-        this.id_marca = id_marca;
-        this.stock_producto = stock_producto;
-        this.precio_producto = precio_producto;
-        this.fecha_inserccion_producto = fecha_inserccion_producto;
-        this.fecha_actualizacion_producto = fecha_actualizacion_producto;
+    
+    // Constructor para inserción (sin fechas y sin ID)
+    public Producto(int idUsuario, String nombreProducto, int idMarca, 
+                   int stockProducto, BigDecimal precioProducto) {
+        this.idUsuario = idUsuario;
+        this.nombreProducto = nombreProducto;
+        this.idMarca = idMarca;
+        this.stockProducto = stockProducto;
+        this.precioProducto = precioProducto;
     }
-
-    // Getters and Setters
-    public int getId_producto() {
-        return id_producto;
+    
+    // Getters y Setters
+    public int getIdProducto() {
+        return idProducto;
     }
-
-    public void setId_producto(int id_producto) {
-        this.id_producto = id_producto;
+    
+    public void setIdProducto(int idProducto) {
+        this.idProducto = idProducto;
     }
-
-    public int getId_usuario() {
-        return id_usuario;
+    
+    public int getIdUsuario() {
+        return idUsuario;
     }
-
-    public void setId_usuario(int id_usuario) {
-        this.id_usuario = id_usuario;
+    
+    public void setIdUsuario(int idUsuario) {
+        this.idUsuario = idUsuario;
     }
-
-    public String getNombre_producto() {
-        return nombre_producto;
+    
+    public String getNombreProducto() {
+        return nombreProducto;
     }
-
-    public void setNombre_producto(String nombre_producto) {
-        this.nombre_producto = nombre_producto;
+    
+    public void setNombreProducto(String nombreProducto) {
+        this.nombreProducto = nombreProducto;
     }
-
-    public int getId_marca() {
-        return id_marca;
+    
+    public int getIdMarca() {
+        return idMarca;
     }
-
-    public void setId_marca(int id_marca) {
-        this.id_marca = id_marca;
+    
+    public void setIdMarca(int idMarca) {
+        this.idMarca = idMarca;
     }
-
-    public int getStock_producto() {
-        return stock_producto;
+    
+    public String getNombreMarca() {
+        return nombreMarca;
     }
-
-    public void setStock_producto(int stock_producto) {
-        this.stock_producto = stock_producto;
+    
+    public void setNombreMarca(String nombreMarca) {
+        this.nombreMarca = nombreMarca;
     }
-
-    public BigDecimal getPrecio_producto() {
-        return precio_producto;
+    
+    public int getStockProducto() {
+        return stockProducto;
     }
-
-    public void setPrecio_producto(BigDecimal precio_producto) {
-        this.precio_producto = precio_producto;
+    
+    public void setStockProducto(int stockProducto) {
+        this.stockProducto = stockProducto;
     }
-
-    public Date getFecha_inserccion_producto() {
-        return fecha_inserccion_producto;
+    
+    public BigDecimal getPrecioProducto() {
+        return precioProducto;
     }
-
-    public void setFecha_inserccion_producto(Date fecha_inserccion_producto) {
-        this.fecha_inserccion_producto = fecha_inserccion_producto;
+    
+    public void setPrecioProducto(BigDecimal precioProducto) {
+        this.precioProducto = precioProducto;
     }
-
-    public Date getFecha_actualizacion_producto() {
-        return fecha_actualizacion_producto;
+    
+    public Timestamp getFechaInserccionProducto() {
+        return fechaInserccionProducto;
     }
-
-    public void setFecha_actualizacion_producto(Date fecha_actualizacion_producto) {
-        this.fecha_actualizacion_producto = fecha_actualizacion_producto;
+    
+    public void setFechaInserccionProducto(Timestamp fechaInserccionProducto) {
+        this.fechaInserccionProducto = fechaInserccionProducto;
     }
-
-    public String getNombre_marca() {
-        return nombre_marca;
+    
+    public Timestamp getFechaActualizacionProducto() {
+        return fechaActualizacionProducto;
     }
-
-    public void setNombre_marca(String nombre_marca) {
-        this.nombre_marca = nombre_marca;
+    
+    public void setFechaActualizacionProducto(Timestamp fechaActualizacionProducto) {
+        this.fechaActualizacionProducto = fechaActualizacionProducto;
+    }
+    
+    @Override
+    public String toString() {
+        return "Producto{" +
+                "idProducto=" + idProducto +
+                ", idUsuario=" + idUsuario +
+                ", nombreProducto='" + nombreProducto + '\'' +
+                ", idMarca=" + idMarca +
+                ", nombreMarca='" + nombreMarca + '\'' +
+                ", stockProducto=" + stockProducto +
+                ", precioProducto=" + precioProducto +
+                ", fechaInserccionProducto=" + fechaInserccionProducto +
+                ", fechaActualizacionProducto=" + fechaActualizacionProducto +
+                '}';
     }
 }
