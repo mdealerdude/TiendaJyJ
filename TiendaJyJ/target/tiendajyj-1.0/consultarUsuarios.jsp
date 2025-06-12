@@ -99,6 +99,7 @@
 </head>
 
 <body class="bg-light">
+    <jsp:include page="menuppl.jsp" />
     <div class="container-fluid py-4">
         <div class="row">
             <div class="col-12">
