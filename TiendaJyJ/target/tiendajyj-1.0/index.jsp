@@ -4,18 +4,18 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Sistema de Farmacia San Juan - Login</title>
+    <title>Sistema de Tienda J&amp;J - Login</title>
     <!-- Bootstrap 5 CDN -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
 </head>
-<body style="background: url('images/Login.jpg') no-repeat center center fixed; background-size: cover;">
+<body style="background: url('images/loginTJYJ.jpg') no-repeat center center fixed; background-size: cover;">
     <div class="bg-dark bg-opacity-50 min-vh-100 d-flex justify-content-center align-items-center">
         <div class="container">
             <div class="row justify-content-center">
                 <div class="col-md-5">
                     <div class="card shadow-lg border-0 rounded-4">
                         <div class="card-body p-4">
-                            <h3 class="card-title text-center mb-4">Ingreso al Sistema de Farmacia</h3>
+                            <h3 class="card-title text-center mb-4">Ingreso al Sistema de Tienda</h3>
 
                             <%-- Mostrar mensaje de error si existe --%>
                             <%
